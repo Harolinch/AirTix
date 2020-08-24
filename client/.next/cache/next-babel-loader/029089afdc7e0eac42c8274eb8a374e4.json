@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default (function () {\n  return;\n});","map":{"version":3,"sources":["D:/projects/microservices/ticket/client/pages/index.js"],"names":[],"mappings":"AAAA,gBAAe,YAAM;AACjB;AACH,CAFD","sourcesContent":["export default () => {\r\n    return \r\n}"]},"metadata":{},"sourceType":"module"}
