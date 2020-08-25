@@ -3,6 +3,7 @@ import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
 import { signin } from '../../test/helpers';
 
+
 it('returns a 404 if the ticket is not found', async () => {
     await request(app)
         .get('/api/tickets/ab3931fd9012')

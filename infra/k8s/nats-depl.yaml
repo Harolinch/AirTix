@@ -21,7 +21,7 @@ spec:
             '-hbt', '5s',
             '-hbf', '2',
             '-SD', 
-            '-cid', 'ticket'
+            '-cid', 'airtix'
           ]
 ---
 apiVersion: v1
