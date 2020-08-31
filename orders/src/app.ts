@@ -4,7 +4,7 @@ import cookieSession from 'cookie-session';
 
 import { errorHandler, NotFoundError } from '@airtix/common';
 import { extractUser } from '@airtix/common';
-import { createOrderRouter, showOrderRouter, indexOrderRouter } from './routes';
+import { createOrderRouter, showOrderRouter, indexOrderRouter, deleteOrderRouter } from './routes';
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.use(extractUser);
 app.use(indexOrderRouter);
 app.use(showOrderRouter);
 app.use(createOrderRouter);
+app.use(deleteOrderRouter);
 
 
 app.all('*', () => {

@@ -1,10 +1,17 @@
 import express, { NextFunction } from 'express';
+import { requireAuth } from '@airtix/common';
+import { Order } from '../models';
 
 const router = express.Router();
 
-router.get('/api/orders', async (req: any, res: any, next: NextFunction) => {
-    res.send({});
-});
+router.get('/api/orders',
+    requireAuth,
+    async (req: any, res: any, next: NextFunction) => {
+        const orders = await Order.find({
+            userId: req.currentUser.id,
+        }).populate('ticket');
+        res.send(orders);
+    });
 
 export {
     router as indexOrderRouter,
