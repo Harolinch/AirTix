@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
-
+import { TicketCreatedListener, TicketUpdatedListener } from './events/listeners';
 
 const start = async () => {
     const envs = ['JWT_KEY', 'MONGO_URI', 'NATS_CLUSTER_ID', 'NATS_CLIENT_ID', 'NATS_URL'];
@@ -32,6 +32,9 @@ const start = async () => {
         });
         process.on('SIGINT', () => process.exit());
         process.on('SIGTERM', () => process.exit());
+
+        new TicketCreatedListener(natsWrapper.client).listen();
+        new TicketUpdatedListener(natsWrapper.client).listen();
 
 
     } catch (err) {

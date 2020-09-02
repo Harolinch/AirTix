@@ -2,11 +2,12 @@ import request from 'supertest';
 import { app } from '../../app';
 import { signin } from '../../test/helpers';
 import { Ticket } from '../../models';
-
+import mongoose from 'mongoose';
 
 it('fetches the order', async () => {
     // Create a ticket
     const tik = Ticket.build({
+        id: mongoose.Types.ObjectId().toHexString(),
         title: 'ticket test',
         price: 20,
     });

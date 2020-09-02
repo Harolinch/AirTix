@@ -30,6 +30,7 @@ router.put('/api/tickets/:id', [
     //what happens if publish failure ??? => Database Transaction is the solution
     new TicketUpdatedPubliser(natsWrapper.client).publish({
         id: ticket.id,
+        version: ticket.version,
         title: ticket.title,
         price: ticket.price,
         userId: ticket.userId,

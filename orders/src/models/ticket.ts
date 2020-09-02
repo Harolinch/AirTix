@@ -1,18 +1,24 @@
 import mongoose from 'mongoose';
-import {Order} from './order';
-import {OrderStatus} from '@airtix/common';
+import { Order } from './order';
+import { OrderStatus } from '@airtix/common';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface TicketAttrs {
+    id: string,
     title: string,
     price: number,
 }
 
-interface TicketDoc extends mongoose.Document, TicketAttrs {
+interface TicketDoc extends mongoose.Document {
+    title: string;
+    price: number;
+    version: number,
     isReserved(): Promise<boolean>;
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
     build(attrs: TicketAttrs): TicketDoc;
+    findByEvent(eventData: { id: string, version: number }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema({
@@ -25,7 +31,7 @@ const ticketSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
-    
+
 }, {
     toJSON: {
         transform(doc, ret) {
@@ -35,7 +41,11 @@ const ticketSchema = new mongoose.Schema({
     }
 });
 
-ticketSchema.methods.isReserved = async function(){
+
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
+ticketSchema.methods.isReserved = async function () {
     const reserved = await Order.findOne({
         ticket: this.id,
         status: { $nin: [OrderStatus.CANCELLED] }
@@ -44,7 +54,18 @@ ticketSchema.methods.isReserved = async function(){
 }
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-    return new Ticket(attrs);
+    return new Ticket({
+        _id: attrs.id,
+        title: attrs.title,
+        price: attrs.price
+    });
+}
+
+ticketSchema.statics.findByEvent = (eventData: { id: string, version: number }) => {
+    return Ticket.findOne({
+        _id: eventData.id,
+        version: eventData.version - 1,
+    });
 }
 
 
