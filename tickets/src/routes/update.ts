@@ -2,7 +2,7 @@ import express, { NextFunction } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPubliser } from '../events/publishers/ticket-updated-publisher';
-import { requireAuth, NotFoundError, NotAuthorizedError, validateRequest } from '@airtix/common';
+import { requireAuth, NotFoundError, NotAuthorizedError, validateRequest, BadRequestError } from '@airtix/common';
 import { natsWrapper } from '../nats-wrapper';
 
 
@@ -18,12 +18,19 @@ router.put('/api/tickets/:id', [
 ], async (req: any, res: any, next: NextFunction) => {
     
     const ticket = await Ticket.findById(req.params.id);
+    
     if (!ticket) {
         return next(new NotFoundError());
     }
+
+    if(ticket.orderId){
+        return next(new BadRequestError('This ticket is reserved'));
+    }
+
     if (ticket.userId !== req.currentUser.id) {
         return next(new NotAuthorizedError());
     }
+
     ticket.set(req.body);
     await ticket.save();
 

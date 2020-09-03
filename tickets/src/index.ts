@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener, OrderCancelledListener } from './events/listeners';
+
 
 
 const start = async () => {
@@ -34,11 +36,16 @@ const start = async () => {
         process.on('SIGTERM', () => process.exit());
 
 
+        //listening to incoming events.....
+        new OrderCreatedListener(natsWrapper.client).listen();
+        new OrderCancelledListener(natsWrapper.client).listen();
+
     } catch (err) {
         console.log(err);
     }
     app.listen(3000, () => {
         console.log('tickets server is listening on port 3000...!');
+        
     });
 }
 
