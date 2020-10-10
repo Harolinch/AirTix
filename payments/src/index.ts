@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
-import { TicketCreatedListener, TicketUpdatedListener, ExpirationCompleteListener } from './events/listeners';
+import {OrderCreatedListener} from './events/listeners/order-created-listener';
+import {OrderCancelledListener} from './events/listeners/order-cancelled-listener';
 const start = async () => {
     const envs = ['JWT_KEY', 'MONGO_URI', 'NATS_CLUSTER_ID', 'NATS_CLIENT_ID', 'NATS_URL'];
     envs.forEach(env => {
@@ -31,16 +32,17 @@ const start = async () => {
         });
         process.on('SIGINT', () => process.exit());
         process.on('SIGTERM', () => process.exit());
+        
+        new OrderCreatedListener(natsWrapper.client);
+        new OrderCancelledListener(natsWrapper.client);
 
-        new TicketCreatedListener(natsWrapper.client).listen();
-        new TicketUpdatedListener(natsWrapper.client).listen();
-        new ExpirationCompleteListener(natsWrapper.client).listen();
+
 
     } catch (err) {
         console.log(err);
     }
     app.listen(3000, () => {
-        console.log('tickets server is listening on port 3000...!');
+        console.log('payments server is listening on port 3000...!');
     });
 }
 
