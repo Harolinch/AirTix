@@ -9,7 +9,7 @@ export class OrderCancelledListener extends AbstractListener<OrderCancelledEvent
 
     async onMessage(data: OrderCancelledEvent['data'], msg: Message) {
         const order = await Order.findOne({
-            id: data.id,
+            _id: data.id,
             version: data.version - 1,
         });
         if(!order) {

@@ -17,10 +17,10 @@ const signup = async () => {
     return cookie;
 }
 
-const signin = async () => {
+const signin = async (id?: string) => {
     // Build a JWT payload. {id, email}
     const payload = {
-        id: mongoose.Types.ObjectId().toHexString(),
+        id: id || mongoose.Types.ObjectId().toHexString(),
         email: "test@test.com"
     }
     

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 import { TicketCreatedListener, TicketUpdatedListener, ExpirationCompleteListener } from './events/listeners';
+import { PaymentCreatedListener } from './events/listeners/payment-created-listener';
 const start = async () => {
     const envs = ['JWT_KEY', 'MONGO_URI', 'NATS_CLUSTER_ID', 'NATS_CLIENT_ID', 'NATS_URL'];
     envs.forEach(env => {
@@ -35,6 +36,7 @@ const start = async () => {
         new TicketCreatedListener(natsWrapper.client).listen();
         new TicketUpdatedListener(natsWrapper.client).listen();
         new ExpirationCompleteListener(natsWrapper.client).listen();
+        new PaymentCreatedListener(natsWrapper.client).listen();
 
     } catch (err) {
         console.log(err);

@@ -33,8 +33,8 @@ const start = async () => {
         process.on('SIGINT', () => process.exit());
         process.on('SIGTERM', () => process.exit());
         
-        new OrderCreatedListener(natsWrapper.client);
-        new OrderCancelledListener(natsWrapper.client);
+        new OrderCreatedListener(natsWrapper.client).listen();
+        new OrderCancelledListener(natsWrapper.client).listen();
 
 
 

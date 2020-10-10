@@ -4,6 +4,7 @@ import cookieSession from 'cookie-session';
 
 import { errorHandler, NotFoundError } from '@airtix/common';
 import { extractUser } from '@airtix/common';
+import { createChargeRouter } from './routes/new';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cookieSession({
 
 
 app.use(extractUser);
+app.use(createChargeRouter);
 
 
 
