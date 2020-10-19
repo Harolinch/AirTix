@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { app } from './app';
 
 const start = async () => {
+    console.log('starting auth service...');
+    console.log('testing on github actions');
     if (!process.env.JWT_KEY) {
         throw new Error('JWT_KEY NOT PROVIDED IN ENVIRONMENT VARIABLES');
     }
