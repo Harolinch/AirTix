@@ -9,7 +9,7 @@ function defineEnvironmentVariables() {
 }
 
 beforeAll(async () => {
-    jest.setTimeout(15000);
+    jest.setTimeout(60000);
     defineEnvironmentVariables();
 
     mongo = new MongoMemoryServer();
